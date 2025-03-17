@@ -1,7 +1,6 @@
+// @todo: Темплейт карточки
 const container = document.querySelector('.content');
 const cardsPlaces = container.querySelector('.places__list')
-
-// @todo: Темплейт карточки
 
 // @todo: DOM узлы
 
@@ -22,7 +21,6 @@ function createCard(titleValue, linkValue ) {
 function deleteCard() {
     const cardToDelete = document.querySelector('.places__item');
     cardToDelete.remove();
-    //console.log(`${cardToDelete}`);
 }
 
 // @todo: Вывести карточки на страницу
