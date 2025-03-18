@@ -16,16 +16,14 @@ function createCard(element, deleteCard) {
     cardImage.alt = element.alt;
     cardTitle.textContent = element.name;
 
-    cardDeleteButton.addEventListener('click', deleteCard);
+    cardDeleteButton.addEventListener('click', () => deleteCard(cardElement));
 
     return cardElement;
   }
 
 // @todo: Функция удаления карточки
 function deleteCard(element) {
-    const cardToDelete = element.target.closest('.card');
-    console.log(cardToDelete);
-    cardToDelete.remove();
+    element.remove();
 }
 
 // @todo: Вывести карточки на страницу
