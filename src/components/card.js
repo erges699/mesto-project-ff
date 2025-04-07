@@ -27,13 +27,10 @@ export function deleteCard(element) {
 
 // Функция лайка карточки
 export function likeCard(evt) {
-    if (evt.target.classList.contains('.card__like-button') 
-        && !(evt.target.classList.contains('card__like-button_is-active'))) {
-    evt.target.classList.toggle('card__like-button_is-active');
-    }
-    else if (evt.target.classList.contains('.card__like-button') 
-        && (evt.target.classList.contains('card__like-button_is-active'))) {
-    evt.target.classList.remove('card__like-button_is-active');
+    //console.log(evt);
+    if (evt.target.classList.contains('card__like-button') && !(evt.target.classList.contains('card__like-button_is-active'))) {
+        evt.target.classList.toggle('card__like-button_is-active');
+    } else if (evt.target.classList.contains('card__like-button') && (evt.target.classList.contains('card__like-button_is-active'))) {
+        evt.target.classList.remove('card__like-button_is-active');
     }
 }
-  

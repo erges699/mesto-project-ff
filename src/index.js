@@ -4,8 +4,8 @@ import { createCard, deleteCard, likeCard } from "./components/card.js";
 import {closeModal, openModal} from "./components/modal.js";
 
 // DOM
-const page = document.querySelector('.page');
-const content = page.querySelector('.content');
+// const page = document.querySelector('.page');
+// const content = page.querySelector('.content');
 const container = document.querySelector('.places');
 const cardsPlaces = container.querySelector('.places__list')
 // Modal popup_type_image
@@ -19,53 +19,25 @@ const popupEditProfileButton = document.querySelector('.profile__edit-button');
 const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupNewCardButton = document.querySelector('.profile__add-button');
 // Close buttons
-const closeButton = document.querySelectorAll('.popup__close');
-// All popups
-const allModals = document.querySelectorAll('.popup');
-// Form
-const profileTitle = content.querySelector('.profile__title');
-const profileInfo = content.querySelector('.profile__description');
-const profileImage = content.querySelector('.profile__image');
+const closeButtons = document.querySelectorAll('.popup__close');
+// Forms
+const formElement = document.forms['edit-profile'];
+const nameInput = formElement.elements.name;
+const jobInput = formElement.elements.description;
+const formCardElement = document.forms['new-place'];
+const nameCardInput = formCardElement.elements['place-name'];
+const jobCardInput = formCardElement.elements.link;
 
-const validationConfig = {
-    formSelector: '.popup__form', // Селектор формы
-    inputSelector: '.popup__input', // Селекторы полей ввода
-    submitButtonSelector: '.popup__button', // Селектор кнопки отправки
-    inactiveButtonClass: 'popup__button_disabled', // Класс неактивной кнопки
-    inputErrorClass: 'popup__input_type_error', // Класс ошибки в поле ввода
-    errorClass: 'popup__error_visible' // Класс отображения ошибки
-};
+const profileTitle = document.querySelector('.profile__title');
+const profileDescription = document.querySelector('.profile__description');
+//const profileImage = document.querySelector('.profile__image');
+
 
 // Вывести карточки на страницу
 initialCards.forEach(function (element) {
     const card = createCard(element, deleteCard, likeCard, openPreviewImage);
     cardsPlaces.append(card);
-    });
-
-// Открыть модальное окно редактирования профиля 
-popupEditProfileButton.addEventListener('click', () => {
-    //clearValidation(popupEditProfile, validationConfig);
-    openModal(popupEditProfile);
-    //setEditProfilePopupData();
 });
-
-//Заполнение полей формы именем/описанием значениями со страницы
-function setEditProfilePopupData() { 
-    editPopupFieldName.value = profileTitle.textContent;
-    editPopupFieldJob.value = profileInfo.textContent;;
-};
-
-// Открытие модальное окно добавления новой карточки
-addNewCardButton.addEventListener('click', function(){
-    //clearValidation(newCardPopup, validationConfig);
-    openModal(popupNewCard);
-});
-
-// Открыть модальное окно изменения аватара пользователя
-userAvatar.addEventListener('click', function() {
-    //clearValidation(newAvatarPopup, validationConfig);
-    openModal(newAvatarPopup);
-})
 
 function openPreviewImage(imageLink, imageName) {
     imageElement.src = imageLink;
@@ -74,17 +46,54 @@ function openPreviewImage(imageLink, imageName) {
     openModal(popupImage);
 }
 
-//closeButton.addEventListener('click', function(){
-//    console.log(closeButton);
-//    console.log(closeButton.closest('.popup'));
-//    closeModal(closeButton.closest('.popup'))
-//});
+// Обработчик «отправки» формы, хотя пока она никуда отправляться не будет
+function handleFormSubmit(evt) {
+    evt.preventDefault();
+    profileTitle.textContent = nameInput.value;
+    profileDescription.textContent = jobInput.value;
+    closeModal(popupEditProfile)
+}
 
-closeButton.addEventListener('click', function(){
-    closeModal(popupImage);
+formElement.addEventListener('submit', handleFormSubmit);
+
+function handleCardFormSubmit(evt) {
+    evt.preventDefault();
+    const newCardName = nameCardInput.value;
+    const newCardLink = jobCardInput.value;
+    const newCard = createCard({
+        name: newCardName, link: newCardLink, alt: newCardName
+    }, deleteCard, likeCard, openPreviewImage);
+    cardsPlaces.prepend(newCard);
+    closeModal(popupNewCard);
+    formCardElement.reset();
+}
+
+formCardElement.addEventListener('submit', handleCardFormSubmit);
+
+// Открыть модальное окно добавления новой карточки
+popupNewCardButton.addEventListener('click', function (){
+    openModal(popupNewCard);
 });
 
+// Открыть модальное окно редактирования профиля 
+popupEditProfileButton.addEventListener('click', function() {
+    openModal(popupEditProfile);
+    nameInput.value = profileTitle.textContent;
+    jobInput.value = profileDescription.textContent;
+});
 
-    //createNewCardForm.reset();
-    //closeModal(newCardPopup);
+// Закрыть модальное окно на крестик
+closeButtons.forEach(function (button)  {
+    button.addEventListener('click', function () {
+        const popupElement = button.closest('.popup');
+        closeModal(popupElement);
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const popups = document.querySelectorAll('.popup');
+    popups.forEach(popup => {
+        popup.classList.add('popup_is-animated');
+    });
+});
 
