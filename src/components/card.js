@@ -1,10 +1,8 @@
 // Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
-const container = document.querySelector('.places');
-const cardsPlaces = container.querySelector('.places__list')
 
 // Функция создания карточки
-export function createCard(element, deleteCard) {
+export function createCard(element, deleteCard, likeCard, openPreviewImage) {
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
     const cardImage = cardElement.querySelector('.card__image');
     const cardTitle = cardElement.querySelector('.card__title');
@@ -17,6 +15,7 @@ export function createCard(element, deleteCard) {
   
     cardDeleteButton.addEventListener('click', () => deleteCard(cardElement));
     cardLikeButton.addEventListener('click', (evt) => likeCard(evt));
+    cardImage.addEventListener('click', () => openPreviewImage(cardImage.src, cardTitle.textContent));
 
     return cardElement;
 }
