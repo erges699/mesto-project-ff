@@ -10,12 +10,12 @@ export function createCard(element, deleteCard, likeCard, openPreviewImage) {
     const cardLikeButton = cardElement.querySelector('.card__like-button');
   
     cardImage.src = element.link;
-    cardImage.alt = element.alt;
+    cardImage.alt = element.name;
     cardTitle.textContent = element.name;
   
     cardDeleteButton.addEventListener('click', () => deleteCard(cardElement));
     cardLikeButton.addEventListener('click', (evt) => likeCard(evt));
-    cardImage.addEventListener('click', () => openPreviewImage(cardImage.src, cardTitle.textContent));
+    cardImage.addEventListener('click', () => openPreviewImage(element.link, element.name));
 
     return cardElement;
 }

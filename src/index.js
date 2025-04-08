@@ -21,9 +21,9 @@ const popupNewCardButton = document.querySelector('.profile__add-button');
 // Close buttons
 const closeButtons = document.querySelectorAll('.popup__close');
 // Forms
-const formElement = document.forms['edit-profile'];
-const nameInput = formElement.elements.name;
-const jobInput = formElement.elements.description;
+const formProfileElement = document.forms['edit-profile'];
+const nameProfileInput = formProfileElement.elements.name;
+const jobProfileInput = formProfileElement.elements.description;
 const formCardElement = document.forms['new-place'];
 const nameCardInput = formCardElement.elements['place-name'];
 const jobCardInput = formCardElement.elements.link;
@@ -47,14 +47,14 @@ function openPreviewImage(imageLink, imageName) {
 }
 
 // Обработчик «отправки» формы, хотя пока она никуда отправляться не будет
-function handleFormSubmit(evt) {
+function handleProfileFormSubmit(evt) {
     evt.preventDefault();
-    profileTitle.textContent = nameInput.value;
-    profileDescription.textContent = jobInput.value;
+    profileTitle.textContent = nameProfileInput.value;
+    profileDescription.textContent = jobProfileInput.value;
     closeModal(popupEditProfile)
 }
 
-formElement.addEventListener('submit', handleFormSubmit);
+formProfileElement.addEventListener('submit', handleProfileFormSubmit);
 
 function handleCardFormSubmit(evt) {
     evt.preventDefault();
@@ -78,8 +78,8 @@ popupNewCardButton.addEventListener('click', function (){
 // Открыть модальное окно редактирования профиля 
 popupEditProfileButton.addEventListener('click', function() {
     openModal(popupEditProfile);
-    nameInput.value = profileTitle.textContent;
-    jobInput.value = profileDescription.textContent;
+    nameProfileInput.value = profileTitle.textContent;
+    jobProfileInput.value = profileDescription.textContent;
 });
 
 // Закрыть модальное окно на крестик
