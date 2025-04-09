@@ -61,7 +61,7 @@ function handleCardFormSubmit(evt) {
     const newCardName = nameCardInput.value;
     const newCardLink = jobCardInput.value;
     const newCard = createCard({
-        name: newCardName, link: newCardLink, alt: newCardName
+        name: newCardName, link: newCardLink
     }, deleteCard, likeCard, openPreviewImage);
     cardsPlaces.prepend(newCard);
     closeModal(popupNewCard);
