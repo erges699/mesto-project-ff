@@ -1,7 +1,8 @@
 import "./pages/index.css";
 import { initialCards } from "./components/cards.js";
 import { createCard, deleteCard, likeCard } from "./components/card.js";
-import {closeModal, openModal} from "./components/modal.js";
+import { closeModal, openModal } from "./components/modal.js";
+import { enableValidation, clearValidation, validationConfig } from "./components/validation.js";
 
 // DOM
 // const page = document.querySelector('.page');
@@ -72,11 +73,13 @@ formCardElement.addEventListener('submit', handleCardFormSubmit);
 
 // Открыть модальное окно добавления новой карточки
 popupNewCardButton.addEventListener('click', function (){
+    clearValidation(popupNewCard, validationConfig);
     openModal(popupNewCard);
 });
 
 // Открыть модальное окно редактирования профиля 
 popupEditProfileButton.addEventListener('click', function() {
+    clearValidation(popupEditProfile, validationConfig);
     openModal(popupEditProfile);
     nameProfileInput.value = profileTitle.textContent;
     jobProfileInput.value = profileDescription.textContent;
@@ -97,3 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// включение валидации вызовом enableValidation
+// все настройки передаются при вызове
+enableValidation(validationConfig);
