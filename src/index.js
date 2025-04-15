@@ -3,7 +3,7 @@ import "./pages/index.css";
 import { createCard, deleteCard, likeCard } from "./components/card.js";
 import { closeModal, openModal } from "./components/modal.js";
 import { enableValidation, clearValidation, validationConfig } from "./components/validation.js";
-import { getInitialCardsApi, getUserInfoApi } from './components/api.js'
+import { getInitialCardsApi, getUserInfoApi, addNewCardApi } from './components/api.js'
 
 // DOM
 // const page = document.querySelector('.page');
@@ -29,24 +29,19 @@ const jobProfileInput = formProfileElement.elements.description;
 const formCardElement = document.forms['new-place'];
 const nameCardInput = formCardElement.elements['place-name'];
 const jobCardInput = formCardElement.elements.link;
+const formCardButton = formCardElement.querySelector('.popup__button')
 
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 const profileImage = document.querySelector('.profile__image');
 
-
-getInitialCardsApi()
-  .then((result) => {
-    // обрабатываем результат
-    //console.log(result);
-    result.forEach(function (element) {
-        const card = createCard(element, deleteCard, likeCard, openPreviewImage);
-        cardsPlaces.append(card);
-    });
-  })
-  .catch((err) => {
-    console.log(err); // выводим ошибку в консоль
-  });
+let userId = '';
+function setUser(user) {
+    userId = user._id;
+    profileTitle.textContent = user.name;
+    profileDescription.textContent = user.about;
+    profileImage.style = `background-image: url('${user.avatar}')`;
+};
 
 // Вывести карточки на страницу
 //initialCards.forEach(function (element) {
@@ -54,7 +49,21 @@ getInitialCardsApi()
 //    cardsPlaces.append(card);
 //});
 
-
+const promises = [getUserInfoApi(), getInitialCardsApi()]
+Promise.all(promises)
+  .then(([user, cards]) => {
+    setUser(user);
+    return([userId, cards])
+  })
+  .then(([userId, cards]) => {
+    cards.forEach(function (element) {
+        const card = createCard(element, deleteCard, likeCard, openPreviewImage, userId);
+        cardsPlaces.append(card);
+    });
+  })
+  .catch((err) => {
+    console.error("Произошла ошибка при получении данных:", err);
+  });  
 
 function openPreviewImage(imageLink, imageName) {
     imageElement.src = imageLink;
@@ -63,7 +72,16 @@ function openPreviewImage(imageLink, imageName) {
     openModal(popupImage);
 }
 
-// Обработчик «отправки» формы, хотя пока она никуда отправляться не будет
+function renderLoading(isLoading, button) {
+    if (isLoading) {
+      button.textContent = 'Сохранение...';
+    }
+    else {
+        button.textContent = 'Сохранить';   
+    }
+  }
+
+// Обработчик «отправки» формы профиля
 function handleProfileFormSubmit(evt) {
     evt.preventDefault();
     profileTitle.textContent = nameProfileInput.value;
@@ -73,16 +91,23 @@ function handleProfileFormSubmit(evt) {
 
 formProfileElement.addEventListener('submit', handleProfileFormSubmit);
 
+// Обработчик «отправки» формы новой карточки
 function handleCardFormSubmit(evt) {
     evt.preventDefault();
     const newCardName = nameCardInput.value;
     const newCardLink = jobCardInput.value;
-    const newCard = createCard({
-        name: newCardName, link: newCardLink
-    }, deleteCard, likeCard, openPreviewImage);
-    cardsPlaces.prepend(newCard);
-    closeModal(popupNewCard);
-    formCardElement.reset();
+
+    renderLoading(true, formCardButton);
+    addNewCardApi(newCardName, newCardLink)
+        .then((res) => {
+            const newCard = createCard(res, deleteCard, likeCard, openPreviewImage, userId);
+            cardsPlaces.prepend(newCard);
+            closeModal(popupNewCard);
+            formCardElement.reset();
+        })
+        .catch((err) => {
+            console.error("Ошибка при добавлении карточки:", err);
+        });  
 }
 
 formCardElement.addEventListener('submit', handleCardFormSubmit);
