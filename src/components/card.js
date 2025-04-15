@@ -1,3 +1,4 @@
+import { addLikeCardApi, deleteLikeCardApi, deleteCardApi} from './api.js'
 // Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
 

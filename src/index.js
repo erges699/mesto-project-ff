@@ -1,8 +1,9 @@
 import "./pages/index.css";
-import { initialCards } from "./components/cards.js";
+//import { initialCards } from "./components/cards.js";
 import { createCard, deleteCard, likeCard } from "./components/card.js";
 import { closeModal, openModal } from "./components/modal.js";
 import { enableValidation, clearValidation, validationConfig } from "./components/validation.js";
+import { getInitialCardsApi, getUserInfoApi } from './components/api.js'
 
 // DOM
 // const page = document.querySelector('.page');
@@ -31,14 +32,29 @@ const jobCardInput = formCardElement.elements.link;
 
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
-//const profileImage = document.querySelector('.profile__image');
+const profileImage = document.querySelector('.profile__image');
 
+
+getInitialCardsApi()
+  .then((result) => {
+    // обрабатываем результат
+    //console.log(result);
+    result.forEach(function (element) {
+        const card = createCard(element, deleteCard, likeCard, openPreviewImage);
+        cardsPlaces.append(card);
+    });
+  })
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  });
 
 // Вывести карточки на страницу
-initialCards.forEach(function (element) {
-    const card = createCard(element, deleteCard, likeCard, openPreviewImage);
-    cardsPlaces.append(card);
-});
+//initialCards.forEach(function (element) {
+//    const card = createCard(element, deleteCard, likeCard, openPreviewImage);
+//    cardsPlaces.append(card);
+//});
+
+
 
 function openPreviewImage(imageLink, imageName) {
     imageElement.src = imageLink;
