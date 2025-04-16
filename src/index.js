@@ -3,7 +3,7 @@ import "./pages/index.css";
 import { createCard, deleteCard, likeCard } from "./components/card.js";
 import { closeModal, openModal } from "./components/modal.js";
 import { enableValidation, clearValidation, validationConfig } from "./components/validation.js";
-import { getInitialCardsApi, getUserInfoApi, addNewCardApi } from './components/api.js'
+import { getInitialCardsApi, getUserInfoApi, addNewCardApi, updateUserAvatarApi, updateUserInfoApi } from './components/api.js'
 
 // DOM
 // const page = document.querySelector('.page');
@@ -20,16 +20,25 @@ const popupEditProfileButton = document.querySelector('.profile__edit-button');
 // Modal popup_type_new-card
 const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupNewCardButton = document.querySelector('.profile__add-button');
+// Modal popup_type_edit-avatar
+const popupEditAvatar = document.querySelector('.popup_type_edit-avatar');
+const avatarImage = document.querySelector('.profile__image');
 // Close buttons
 const closeButtons = document.querySelectorAll('.popup__close');
 // Forms
 const formProfileElement = document.forms['edit-profile'];
 const nameProfileInput = formProfileElement.elements.name;
 const jobProfileInput = formProfileElement.elements.description;
+const formProfileButton = formProfileElement.querySelector('.popup__button')
+
 const formCardElement = document.forms['new-place'];
 const nameCardInput = formCardElement.elements['place-name'];
 const jobCardInput = formCardElement.elements.link;
 const formCardButton = formCardElement.querySelector('.popup__button')
+
+const formAvatarElement = document.forms['edit-avatar'];
+const jobAvatarInput = formAvatarElement.elements.avatarlink;
+const formAvatarButton = formAvatarElement.querySelector('.popup__button')
 
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
@@ -84,12 +93,43 @@ function renderLoading(isLoading, button) {
 // Обработчик «отправки» формы профиля
 function handleProfileFormSubmit(evt) {
     evt.preventDefault();
-    profileTitle.textContent = nameProfileInput.value;
-    profileDescription.textContent = jobProfileInput.value;
-    closeModal(popupEditProfile)
+    const userName = nameProfileInput.value;
+    const userDescription = jobProfileInput.value;
+    renderLoading(true, formProfileButton);
+    
+    updateUserInfoApi(userName, userDescription)
+    .then((res) => {
+        profileTitle.textContent = res.name;
+        profileDescription.textContent = res.about;
+        closeModal(popupEditProfile);
+    })
+    .catch((err) => {
+        console.error("Ошибка при изменении данных пользователя:", err);
+    })
+    .finally(() => renderLoading(false, formProfileButton));
+
 }
 
 formProfileElement.addEventListener('submit', handleProfileFormSubmit);
+
+// Обработчик «отправки» формы аватара
+function handleAvatarFormSubmit(evt) {
+    evt.preventDefault();
+    const editAvatarLink = jobAvatarInput.value;
+    
+    renderLoading(true, formAvatarButton);
+    updateUserAvatarApi(editAvatarLink)
+        .then((res) => {
+            avatarImage.style = `background-image: url('${res.avatar}')`;
+            closeModal(popupEditAvatar);
+        })
+        .catch((err) => {
+            console.error("Ошибка при изменении аватара:", err);
+        })
+        .finally(() => renderLoading(false, formAvatarButton));
+}
+
+formAvatarElement.addEventListener('submit', handleAvatarFormSubmit);
 
 // Обработчик «отправки» формы новой карточки
 function handleCardFormSubmit(evt) {
@@ -107,10 +147,17 @@ function handleCardFormSubmit(evt) {
         })
         .catch((err) => {
             console.error("Ошибка при добавлении карточки:", err);
-        });  
+        })
+        .finally(() => renderLoading(false,formCardButton));
 }
 
 formCardElement.addEventListener('submit', handleCardFormSubmit);
+
+// Открыть модальное окно редактирования ссылки аватара
+avatarImage.addEventListener('click', function() {
+    clearValidation(popupEditAvatar, validationConfig);
+    openModal(popupEditAvatar);
+});
 
 // Открыть модальное окно добавления новой карточки
 popupNewCardButton.addEventListener('click', function (){
