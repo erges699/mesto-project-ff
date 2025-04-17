@@ -1,13 +1,11 @@
 import "./pages/index.css";
-//import { initialCards } from "./components/cards.js";
 import { createCard, deleteCard, likeCard } from "./components/card.js";
 import { closeModal, openModal } from "./components/modal.js";
-import { enableValidation, clearValidation, validationConfig } from "./components/validation.js";
+import { enableValidation, clearValidation } from "./components/validation.js";
 import { getInitialCardsApi, getUserInfoApi, addNewCardApi, updateUserAvatarApi, updateUserInfoApi } from './components/api.js'
+import { validationConfig } from './components/validation-config.js'
 
 // DOM
-// const page = document.querySelector('.page');
-// const content = page.querySelector('.content');
 const container = document.querySelector('.places');
 const cardsPlaces = container.querySelector('.places__list')
 // Modal popup_type_image
@@ -53,12 +51,6 @@ function setUser(user) {
     profileImage.style = `background-image: url('${user.avatar}')`;
 };
 
-// Вывести карточки на страницу
-//initialCards.forEach(function (element) {
-//    const card = createCard(element, deleteCard, likeCard, openPreviewImage);
-//    cardsPlaces.append(card);
-//});
-
 const promises = [getUserInfoApi(), getInitialCardsApi()]
 Promise.all(promises)
   .then(([user, cards]) => {
@@ -83,12 +75,7 @@ function openPreviewImage(imageLink, imageName) {
 }
 
 function renderLoading(isLoading, button) {
-    if (isLoading) {
-      button.textContent = 'Сохранение...';
-    }
-    else {
-        button.textContent = 'Сохранить';   
-    }
+    button.textContent = isLoading ? 'Сохранение...' : 'Сохранить'
   }
 
 // Обработчик «отправки» формы профиля
