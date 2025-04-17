@@ -26,20 +26,21 @@ const avatarImage = document.querySelector('.profile__image');
 // Close buttons
 const closeButtons = document.querySelectorAll('.popup__close');
 // Forms
+// edit-profile
 const formProfileElement = document.forms['edit-profile'];
 const nameProfileInput = formProfileElement.elements.name;
 const jobProfileInput = formProfileElement.elements.description;
 const formProfileButton = formProfileElement.querySelector('.popup__button')
-
+// new-place
 const formCardElement = document.forms['new-place'];
 const nameCardInput = formCardElement.elements['place-name'];
 const jobCardInput = formCardElement.elements.link;
 const formCardButton = formCardElement.querySelector('.popup__button')
-
+// edit-avatar
 const formAvatarElement = document.forms['edit-avatar'];
 const jobAvatarInput = formAvatarElement.elements.avatarlink;
 const formAvatarButton = formAvatarElement.querySelector('.popup__button')
-
+// porofile-title
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 const profileImage = document.querySelector('.profile__image');

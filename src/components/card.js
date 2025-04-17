@@ -17,6 +17,10 @@ export function createCard(element, deleteCard, likeCard, openPreviewImage, user
     cardImage.alt = element.name;
     cardTitle.textContent = element.name;
 
+    const ownerSetLike = element.likes.some(likes => {
+        return likes._id === userId;
+    });
+
     if(element.likes.length > 0) {
         cardLikeCounter.textContent = element.likes.length;
     } else {
@@ -28,6 +32,13 @@ export function createCard(element, deleteCard, likeCard, openPreviewImage, user
     } else {
         cardDeleteButton.addEventListener('click', () => deleteCard(cardId, cardElement));
     }
+
+    if (ownerSetLike) {
+        cardLikeButton.classList.toggle('card__like-button_is-active');
+    } else {
+        cardLikeButton.classList.remove('card__like-button_is-active');
+    }
+
     cardLikeButton.addEventListener('click', (evt) => likeCard(evt, cardId, cardLikeCounter));
     cardImage.addEventListener('click', () => openPreviewImage(element.link, element.name));
 
