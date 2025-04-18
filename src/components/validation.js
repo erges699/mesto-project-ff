@@ -30,7 +30,7 @@ const toggleButtonState = (inputList, buttonElement, validationConfig) => {
     }
 };
 
-const isValid = (formElement, inputElement) => {
+const isValid = (formElement, inputElement, validationConfig) => {
     if (inputElement.validity.patternMismatch) {
         inputElement.setCustomValidity(inputElement.dataset.errorMessage);
     } else {
@@ -52,7 +52,7 @@ const setEventListeners = (formElement, validationConfig) => {
 
     inputList.forEach((inputElement) => {
         inputElement.addEventListener('input', () => {
-            isValid(formElement, inputElement);
+            isValid(formElement, inputElement, validationConfig);
             toggleButtonState(inputList, buttonElement, validationConfig);
         });
     });
