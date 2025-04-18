@@ -1,5 +1,5 @@
 import "./pages/index.css";
-import { createCard, deleteCard, likeCard } from "./components/card.js";
+import { createCard, deleteCardConfirmation, likeCard, handleCardFormDeleteConfirm } from "./components/card.js";
 import { closeModal, openModal } from "./components/modal.js";
 import { enableValidation, clearValidation } from "./components/validation.js";
 import { getInitialCardsApi, getUserInfoApi, addNewCardApi, updateUserAvatarApi, updateUserInfoApi } from './components/api.js'
@@ -21,6 +21,8 @@ const popupNewCardButton = document.querySelector('.profile__add-button');
 // Modal popup_type_edit-avatar
 const popupEditAvatar = document.querySelector('.popup_type_edit-avatar');
 const avatarImage = document.querySelector('.profile__image');
+// Modal popup_type_delete-confirm
+export const popupDeleteConfirm = document.querySelector('.popup_type_delete-confirm');
 // Close buttons
 const closeButtons = document.querySelectorAll('.popup__close');
 // Forms
@@ -38,6 +40,9 @@ const formCardButton = formCardElement.querySelector('.popup__button')
 const formAvatarElement = document.forms['edit-avatar'];
 const jobAvatarInput = formAvatarElement.elements.avatarlink;
 const formAvatarButton = formAvatarElement.querySelector('.popup__button')
+// delete-confirm
+const formDeleteConfirm = document.forms['delete-confirm'];
+const formDeleteConfirmButton = formDeleteConfirm.querySelector('.popup__button');
 // porofile-title
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
@@ -59,7 +64,7 @@ Promise.all(promises)
   })
   .then(([userId, cards]) => {
     cards.forEach(function (element) {
-        const card = createCard(element, deleteCard, likeCard, openPreviewImage, userId);
+        const card = createCard(element, deleteCardConfirmation, likeCard, openPreviewImage, userId);
         cardsPlaces.append(card);
     });
   })
@@ -140,6 +145,9 @@ function handleCardFormSubmit(evt) {
 }
 
 formCardElement.addEventListener('submit', handleCardFormSubmit);
+
+// Слушатель отправки формы подтверждения удаления карточки
+formDeleteConfirm.addEventListener('submit', handleCardFormDeleteConfirm);
 
 // Открыть модальное окно редактирования ссылки аватара
 avatarImage.addEventListener('click', function() {
